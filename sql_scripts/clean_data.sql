@@ -1,0 +1,1 @@
+delete from articles where extract(year from pubdate) < 2013;
