@@ -1,21 +1,20 @@
-from textblob import TextBlob
-
+from textblob import Blobber
+from textblob.np_extractors import ConllExtractor
 
 class TextBlobExtractor:
-    @staticmethod
-    def fix(np):
-        if not str.isalpha(np[-1]):
-            np = str.strip(np[:-1])
+    def __init__(self):
+        self.blob_factory = Blobber(np_extractor=ConllExtractor(), analyzer=None)
 
-        return np
+    def fix(self,np):
+        return np.replace("'s", "").replace("\"", "").strip()
 
-    @staticmethod
-    def extract_noun_phrases(text):
-        blob = TextBlob(text)
+    def extract_noun_phrases(self,text):
 
-        noun_phrases = set([np for np in blob.noun_phrases if len(np) > 4 and not np.count(" ") > 3])
+        blob = self.blob_factory(text)
 
-        noun_phrases = map(TextBlobExtractor.fix, noun_phrases)
+        noun_phrases = set([np.strip() for np in blob.noun_phrases if len(np) > 4 and not np.count(" ") > 3])
+
+        noun_phrases = filter(lambda np: all(x.isalnum() or x.isspace() for x in np), noun_phrases)
 
         return list(noun_phrases)
 
