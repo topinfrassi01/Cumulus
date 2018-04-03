@@ -2,6 +2,8 @@
 
 ## How to install
 
+You need to run this  also: python -m textblob.download_corpora
+
 - Obviously install everything listed in [Software Reqs](#reqs)
 - Download the Kaggle's dataset listed in [Credits](#credits)
 - Extract it

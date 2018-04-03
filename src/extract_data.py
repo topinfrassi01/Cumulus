@@ -5,7 +5,6 @@ from dateutil import parser
 
 
 def extract_data(directory):
-
     insert_pub = "INSERT INTO publications(name) VALUES(%s) RETURNING publications.id;"
     insert_articles = """INSERT INTO articles(publicationid, author, pubdate, title, url, content)
         VALUES(%s, %s, %s, %s, %s, %s);"""
@@ -44,12 +43,12 @@ def extract_data(directory):
                     # If date doesn't work, the row can't be used.
                     try:
                         dt = parser.parse(row["date"])
-                    except :
+                    except:
                         continue
 
                     cursor.execute(insert_articles, (pub_id, row["author"],
-                                                             dt, row["title"],
-                                                             row["url"], row["content"]))
+                                                     dt, row["title"],
+                                                     row["url"], row["content"]))
 
                 connector.commit()
         except:

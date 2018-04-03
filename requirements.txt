@@ -1,2 +1,4 @@
+flask
 psycopg2==2.7.4
 pandas==0.20.3
+textblob==0.15.1
