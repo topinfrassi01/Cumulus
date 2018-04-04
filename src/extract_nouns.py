@@ -3,80 +3,73 @@ from nlp.TextBlobExtractor import TextBlobExtractor
 import multiprocessing
 import traceback
 import json
-import time
 from functools import reduce
 
-select_query = "select id,content from articles order by id limit %s offset %s"
 
-
-def main():
+def extract_nouns():
 
     batch_size = 10000
 
-    with PostGreConnector.from_configuration() as connector:
-        count_cur = connector.create_cursor()
-
-        count_cur.execute("select count(id) from articles")
-        articles_count = count_cur.fetchone()[0]
+    articles_count = get_articles_count()
 
     # Nifty trick from https://stackoverflow.com/a/17511341/2785479 to ceil a division
     batch_count = -(-articles_count // batch_size)
 
     for batch_num in range(batch_count):
+
         with PostGreConnector.from_configuration() as connector:
 
-            batch_start = (batch_num * batch_size)
-            batch_end = batch_start + batch_size
-            select_cur = connector.create_cursor()
+            start_index = batch_num * batch_size
 
-            select_cur.execute(select_query, (batch_size, batch_start))
-            rows = select_cur.fetchall()
+            end_index = start_index + batch_size
+            select_cursor = connector.create_cursor()
+
+            select_cursor.execute("select id,content from articles order by id limit %s offset %s", (batch_size, start_index))
+            rows = select_cursor.fetchall()
 
             try:
-                print("Starting batch {0} to {1}".format(batch_start, batch_end))
-
-                extract_start = time.time()
+                print("Starting batch {0} to {1}".format(start_index, end_index))
 
                 p = multiprocessing.Pool(5)
-                inserts_to_do = p.map(process_batch, split_list(rows, 5))
-                inserts_to_do = reduce(lambda x,y: x + y, inserts_to_do)
+                inserts_to_do = p.map(process_articles, split_list(rows, 5))
 
-                extract_end = time.time()
-                print("Extracting noun phrases took {0} seconds".format(str(extract_end - extract_start)))
+                inserts_to_do = reduce(lambda prev, curr: prev + curr, inserts_to_do)
 
-                insert_cur = connector.create_cursor()
+                insert_cursor = connector.create_cursor()
 
-                insert_start = time.time()
-
-                args_str = ','.join(insert_cur.mogrify("(%s,%s)", x).decode("utf-8") for x in inserts_to_do)
-                insert_cur.execute("insert into nouns(article_id, content_json) VALUES" + args_str)
+                inserted_values = ','.join(insert_cursor.mogrify("(%s,%s)", x).decode("utf-8") for x in inserts_to_do)
+                insert_cursor.execute("insert into nouns(article_id, content_json) VALUES " + inserted_values)
 
                 connector.commit()
 
-                insert_end = time.time()
-
-                print("Inserting noun phrases took {0} seconds".format(str(insert_end - insert_start)))
-
-                print("Commited batch {0} to {1}".format(batch_start, batch_end))
+                print("Commited batch {0} to {1}".format(start_index, end_index))
             except:
-                print("Batch {0} to {1} failed.".format(batch_start, batch_end))
+                print("Batch {0} to {1} failed.".format(start_index, end_index))
 
                 # This prints the type, value, and stack trace of the
                 # current exception being handled.
                 traceback.print_exc()
 
-                print()
                 connector.rollback()
                 raise
 
 
-def split_list(alist, wanted_parts=1):
-    length = len(alist)
-    return [ alist[i*length // wanted_parts: (i+1)*length // wanted_parts]
-             for i in range(wanted_parts) ]
+def get_articles_count():
+    with PostGreConnector.from_configuration() as connector:
+        count_cur = connector.create_cursor()
+
+        count_cur.execute("select count(id) from articles")
+        articles_count = count_cur.fetchone()[0]
+    return articles_count
 
 
-def process_batch(rows):
+def split_list(array, wanted_parts=1):
+    length = len(array)
+    return [array[i * length // wanted_parts: (i + 1) * length // wanted_parts]
+            for i in range(wanted_parts)]
+
+
+def process_articles(rows):
     inserts_todo = []
     tb_extractor = TextBlobExtractor()
 
@@ -92,4 +85,4 @@ def process_batch(rows):
 
 
 if __name__ == "__main__":
-    main()
+    extract_nouns()
