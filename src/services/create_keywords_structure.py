@@ -1,6 +1,7 @@
 from util.PostGreConnector import PostGreConnector
 import json
 
+
 def create_keywords_structure():
     with PostGreConnector.from_configuration() as connector:
         select_all = """select content_json, pubdate
@@ -50,6 +51,7 @@ def create_keywords_structure():
 
 
 class Keyword:
+
     def __init__(self, word, first_date, last_date, total, day_count):
         self.word = word
         self.first_date = first_date
@@ -59,7 +61,7 @@ class Keyword:
         self.avg_per_day = 0
 
     def get_values_to_insert(self):
-        return (self.word, self.first_date, self.last_date, self.avg_per_day, self.day_count)
+        return self.word, self.first_date, self.last_date, self.avg_per_day, self.day_count
 
 
 if __name__ == "__main__":

@@ -14,9 +14,7 @@ class Words(Resource):
     def get(self):
         nouns = get_nouns_for_date((date(2016,1,1),))
 
-        nouns = sorted(nouns.items(), key=lambda x: len(x[1]))
-        nouns.reverse()
-        return nouns[0:10]
+        return nouns[0:30]
 
 class Main(Resource):
     def get(self):
