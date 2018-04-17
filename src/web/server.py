@@ -8,7 +8,7 @@ app = Flask(__name__)
 @app.route('/')
 def root():
     keywords = get_nouns_for_date((date(2016, 1, 1),))
-    return render_template('index.html', keywords=keywords)
+    return render_template('index.html', keywords=keywords[0:30])
 
 
 if __name__ == '__main__':

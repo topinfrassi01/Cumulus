@@ -1,3 +1,11 @@
+body {
+  background-color:lightgray;
+}
+
+header {
+  text-align: center;
+}
+
 .tile {
   display: block;
   padding: 10px;
@@ -8,9 +16,13 @@
   background-size: cover;
   
 }
-.tile-content {
+.tile-number {
   font-size:300%;
+}
+
+.tile-content {
   visibility: hidden;
+  font-size:100%;
 }
 
 a.tile {

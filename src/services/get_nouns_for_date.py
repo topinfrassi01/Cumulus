@@ -33,12 +33,11 @@ def get_nouns_for_date(date):
                 keywords[noun] = []
             keywords[noun].append(article_id)
 
-    kw_with_avg = []
+    result = {}
     with PostGreConnector.from_configuration() as connector:
         for kw in keywords.keys():
             select_cursor = connector.create_cursor()
             select_cursor.execute("select avgperday from keywords where text = %s", (kw,))
-
             average_per_day = select_cursor.fetchone()
 
             if average_per_day is None:
@@ -46,17 +45,11 @@ def get_nouns_for_date(date):
             else:
                 average_per_day = float(average_per_day[0])
 
-            kw_with_avg.append((kw, average_per_day))
+            today_total = len(keywords[kw])
+            coeff = (today_total / average_per_day) if not average_per_day == 0 else 1
 
-    kw_with_avg = sorted(kw_with_avg, key=lambda x: x[1], reverse=True)
-
-    result = {}
-    for kw, avg in kw_with_avg:
-        today_total = len(keywords[kw])
-        coeff = (today_total / avg) if not avg == 0 else 1
-
-        if coeff > 1.30:
-            result[kw] = ("{0:.2f}".format(coeff),today_total,  keywords[kw])
+            if coeff > 1.30:
+                result[kw] = ("{0:.2f}".format(coeff), today_total, keywords[kw])
 
     return sorted(result.items(), key=lambda x: x[1][0], reverse=True)
 

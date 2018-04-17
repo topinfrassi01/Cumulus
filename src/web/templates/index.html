@@ -11,31 +11,24 @@
         <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
     </head>
     <body>
-        <!-- Hyperlink Tiles -->
-        <header>2. Hyperlink Tiles</header>
         <div class="container">
+            <header><h1>Cumulus News</h1></header>
+            <p></p>
             {% set index = 1 %}
             {% for message in keywords %}
-                {% if index % 4 == 0 %}
-                    <!--<div class="row">-->
-                {%endif%}
-                    <div class="col-xs-3 tile-container">
+                    <div class="col-xs-6 col-sm-3 tile-container">
                         <a href="#" target="_blank" class="tile tile-color-{{range(1, 10) | random}}">
                             <p>
                                 <div class="tile-title">
                                     {{message[0]}}
                                 </div>
                                 <div class="tile-content">
-                                    <span class="tile-number">{{message[1][0]}}</span><span>x</span>
-                                    /
-                                    <span>{{message[1][1]}}</span>
+                                    <div><span class="tile-number">{{message[1][1]}}</span> mentions</div>
+                                    <div><span class="tile-number">{{message[1][0]}}</span>x more than usual</div>    
                                 </div>
                             </p>
                         </a>
                     </div>
-                {% if index % 4 == 0 %}
-                    <!--</div>-->
-                {%endif%}
                 {% set index = index + 1 %}
             {% endfor %}
             </div>
