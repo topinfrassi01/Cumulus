@@ -56,7 +56,7 @@ def get_nouns_for_date(date):
         coeff = (today_total / avg) if not avg == 0 else 1
 
         if coeff > 1.30:
-            result[kw] = (coeff, keywords[kw])
+            result[kw] = ("{0:.2f}".format(coeff),today_total,  keywords[kw])
 
     return sorted(result.items(), key=lambda x: x[1][0], reverse=True)
 
