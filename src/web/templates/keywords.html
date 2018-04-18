@@ -6,35 +6,22 @@
         <meta name="keywords" content="News, Cumulus">
         <meta name="author" content="Francis Toupin">
         <title>Cumulus News</title>
-        
+
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
     </head>
     <body>
         <div class="container">
             <header><h1>Cumulus News</h1></header>
-            {% set index = 1 %}
-            {% for message in keywords %}
-                    <div class="col-xs-6 col-sm-3 tile-container">
-                        <a href="{{url_for('keyword')}}" target="_blank" class="tile keyword-link tile-color-{{range(1, 10) | random}}">
-                            <p>
-                                <div class="tile-title">
-                                    {{message[0]}}
-                                </div>
-                                <div class="tile-content">
-                                    <div><span class="tile-number">{{message[1][1]}}</span> mentions</div>
-                                    <div><span class="tile-number">{{message[1][0]}}</span>x more than usual</div>
-                                    <input class="keyword-articles" type="hidden" value="{{message[1][2]}}"/>
-                                </div>
-                            </p>
-                        </a>
-                    </div>
-                {% set index = index + 1 %}
+            <ul>
+            {% for message in articles %}
+                <li>
+                    {{message[1]}}
+                </li>
             {% endfor %}
-            </div>
+            </ul>
         </div>
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-        <script src="{{url_for('static', filename='main.js')}}"></script>
     </body>
 </html>

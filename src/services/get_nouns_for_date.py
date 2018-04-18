@@ -49,7 +49,7 @@ def get_nouns_for_date(date):
             coeff = (today_total / average_per_day) if not average_per_day == 0 else 1
 
             if coeff > 1.30:
-                result[kw] = ("{0:.2f}".format(coeff), today_total, keywords[kw])
+                result[kw] = ("{0:.2f}".format(coeff), today_total, json.dumps(keywords[kw]))
 
     return sorted(result.items(), key=lambda x: x[1][0], reverse=True)
 
