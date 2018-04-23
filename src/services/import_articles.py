@@ -1,10 +1,10 @@
 from util.PostGreConnector import PostGreConnector
 import pandas as pd
-import os.path
+import os
 from dateutil import parser
 
 
-def extract_data(directory):
+def import_articles(directory):
     insert_pub = "INSERT INTO publications(name) VALUES(%s) RETURNING publications.id;"
     insert_articles = """INSERT INTO articles(publicationid, author, pubdate, title, url, content)
         VALUES(%s, %s, %s, %s, %s, %s);"""
@@ -59,4 +59,4 @@ def extract_data(directory):
 if __name__ == "__main__":
     dirname = os.path.dirname(__file__)
     filepath = os.path.join(dirname, '../data/all-the-news/')
-    extract_data(filepath)
+    import_articles(filepath)

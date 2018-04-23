@@ -6,7 +6,7 @@ import json
 from functools import reduce
 
 
-def extract_nouns():
+def create_keywords_per_article():
 
     batch_size = 10000
 
@@ -38,7 +38,7 @@ def extract_nouns():
                 insert_cursor = connector.create_cursor()
 
                 inserted_values = ','.join(insert_cursor.mogrify("(%s,%s)", x).decode("utf-8") for x in inserts_to_do)
-                insert_cursor.execute("insert into nouns_per_article(article_id, content_json) VALUES " + inserted_values)
+                insert_cursor.execute("insert into keywords_per_article(article_id, content_json) VALUES " + inserted_values)
 
                 connector.commit()
 
@@ -85,4 +85,4 @@ def process_articles(rows):
 
 
 if __name__ == "__main__":
-    extract_nouns()
+    create_keywords_per_article()

@@ -1,7 +1,7 @@
 from util.PostGreConnector import PostGreConnector
 
 
-def load_articles(ids):
+def get_articles(ids):
 
     with PostGreConnector.from_configuration() as connector:
         cursor = connector.create_cursor()
@@ -12,4 +12,4 @@ def load_articles(ids):
 
 
 if __name__ == "__main__":
-    print(load_articles([52846, 39121]))
+    print(get_articles([52846, 39121]))

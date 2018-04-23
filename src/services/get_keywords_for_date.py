@@ -12,12 +12,12 @@ def _get_all_article_dates():
         return select_cursor.fetchall()
 
 
-def get_nouns_for_date(date):
+def get_keywords_for_date(date):
     with PostGreConnector.from_configuration() as connector:
         select_cursor = connector.create_cursor()
 
         select_cursor.execute("""select articles.id, content_json from articles
-    inner join nouns_per_article on nouns_per_article.article_id = articles.id
+    inner join keywords_per_article on keywords_per_article.article_id = articles.id
     where articles.pubdate = %s
     """, date)
 
@@ -56,6 +56,6 @@ def get_nouns_for_date(date):
 
 if __name__ == "__main__":
     dates = _get_all_article_dates()
-    nouns = get_nouns_for_date(dates[0])
+    nouns = get_keywords_for_date(dates[0])
 
     print(nouns)

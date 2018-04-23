@@ -2,19 +2,19 @@ from util.PostGreConnector import PostGreConnector
 import json
 
 
-def create_keywords_structure():
+def create_keywords_average():
     with PostGreConnector.from_configuration() as connector:
         select_all = """select content_json, pubdate
-                        from articles inner join nouns_per_article np on articles.id = np.article_id
+                        from articles inner join keywords_per_article np on articles.id = np.article_id
                         order by pubdate """
 
         cursor = connector.create_cursor()
         cursor.execute(select_all)
 
-        nouns_per_articles = cursor.fetchall()
+        keywords_per_articles = cursor.fetchall()
 
     keywords_structure = {}
-    for row in nouns_per_articles:
+    for row in keywords_per_articles:
         keywords = json.loads(row[0], encoding="utf8")
         pubdate = row[1]
 
@@ -65,4 +65,4 @@ class Keyword:
 
 
 if __name__ == "__main__":
-    create_keywords_structure()
+    create_keywords_average()

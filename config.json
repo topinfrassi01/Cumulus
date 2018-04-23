@@ -4,5 +4,6 @@
     "database_name" : "",
     "username" : "",
     "password" : ""
-  }
+  },
+  "data_path": "../data/all-the-news/"
 }
