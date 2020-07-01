@@ -2,7 +2,7 @@
 
 ## What is Cumulus?
 
-Cumulus is a tool to explore the news. Instead of the common categories like Sports, Politics, Economy, etc.
+Cumulus is a tool to explore the news in a different way than with the common categories like Sports, Politics, Economy, etc.
 
 Cumulus works differently. In this very case, after exploring a few thousand news articles from a Kaggle dataset, it has determined the average at which noun phrase occur per day.
 
